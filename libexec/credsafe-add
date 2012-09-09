@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+if [ $# -ne 1 ]; then
+  exec credsafe help add
+  exit 1
+fi
+
+credname="$1"
+credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
+creddir="${CREDSAFE_ROOT}/db/$(dirname ${credname})"
+recpfile="${CREDSAFE_ROOT}/db/${credname}.rcp"
+
+credsafe checkname "$credname"
+
+if [ -f "$credfile" ]; then
+  error "Credential '${credname}' already exists!"
+  exit 1
+fi
+
+mkdir -p "$creddir"
+echo "$(credsafe whoami)" >"$recpfile"
+touch "$credfile"
+credsafe set "$credname"

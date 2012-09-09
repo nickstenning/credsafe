@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+if [ "$1" = "-c" ]; then
+  checkonly=yes
+fi
+
+die () {
+  error "Please run 'credsafe init' first"
+  exit 1
+}
+
+init_status () {
+  if [ "$checkonly" != "yes" ]; then
+    status "$@"
+  fi
+}
+
+check_identity () {
+  if [ ! -f "${CREDSAFE_ROOT}/me" ]; then
+    # If being run interactively, attempt to fix the problem
+    if [ "$checkonly" != "yes" ]; then
+      printf "Please supply your GPG key ID: " >&2
+      read -r REPLY
+      echo $REPLY >"${CREDSAFE_ROOT}/me"
+    # Otherwise, fail
+    else      
+      die
+    fi
+  fi
+
+  local id="$(cat "${CREDSAFE_ROOT}/me")"
+  local extended_id="$(gpg --with-colons --list-keys "${id}" | grep '^pub' | head -1 | cut -d: -f10)"
+  init_status "Identified as ${id} (${extended_id})"
+}
+
+if [ -d "$CREDSAFE_ROOT" ]; then
+  if [ -d "${CREDSAFE_ROOT}/.git" ]; then
+    init_status "Found existing credsafe database in ${CREDSAFE_ROOT}"
+    check_identity
+    exit
+  else
+    error "${CREDSAFE_ROOT} exists, but is not a git repository. Aborting!"
+    exit 1
+  fi
+fi
+
+init_status "Creating new credsafe database in ${CREDSAFE_ROOT}..."
+
+mkdir "$CREDSAFE_ROOT"
+mkdir "${CREDSAFE_ROOT}/db"
+
+echo "/me" >"${CREDSAFE_ROOT}/.gitignore"
+touch "${CREDSAFE_ROOT}/db/.gitignore"
+
+git init -q
+if ! git show-ref HEAD >/dev/null; then
+  git add -A
+  git commit -m "Initial commit: blank credsafe repository"
+fi
+
+check_identity

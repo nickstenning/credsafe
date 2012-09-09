@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+CREDSAFE_VERSION="0.0.1"
+
+if [ -t 2 -a -z "$CREDSAFE_NO_COLOUR" ]; then
+  export ANSI_RED="\033[31m"
+  export ANSI_GREEN="\033[32m"
+  export ANSI_YELLOW="\033[33m"
+  export ANSI_BLUE="\033[34m"
+  export ANSI_WHITE="\033[37m"
+  export ANSI_RESET="\033[0m"
+  export ANSI_BOLD="\033[1m"
+fi
+
+abs_dirname() {
+  local cwd="$(pwd)"
+  local path="$1"
+
+  while [ -n "$path" ]; do
+    cd "${path%/*}"
+    local name="${path##*/}"
+    path="$(readlink "$name" || true)"
+  done
+
+  pwd
+  cd "$cwd"
+}
+
+bin_path="$(abs_dirname "$0")"
+export PATH="${bin_path}:${PATH}"
+
+[[ -z "$CREDSAFE_ROOT" ]] && CREDSAFE_ROOT="${HOME}/.credsafe"
+export CREDSAFE_ROOT
+
+export GIT_WORK_TREE="${CREDSAFE_ROOT}"
+export GIT_DIR="${CREDSAFE_ROOT}/.git"
+
+command="$1"
+case "$command" in
+  "" | "-h" | "--help" )
+    echo -e "credsafe ${CREDSAFE_VERSION}\n$(credsafe-help)" >&2
+    ;;
+  * )
+    command_path="$(command -v "credsafe-$command" || true)"
+    if [ -z "$command_path" ]; then
+      echo "credsafe: no such command \`$command'" >&2
+      exit 1
+    fi
+  
+    shift 1
+    exec "$command_path" "$@"
+    ;;
+esac

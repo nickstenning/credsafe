@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "${ANSI_RED}${ANSI_BOLD}ERROR:${ANSI_RESET}${ANSI_RED} ${@}${ANSI_RESET}" >&2

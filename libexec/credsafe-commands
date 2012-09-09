@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+shopt -s nullglob
+
+IFS=:
+{ for path in $PATH; do
+    for command in "${path}/credsafe-"*; do
+      command="${command##*credsafe-}"
+      echo "${command}"
+    done
+  done
+} | sort | uniq

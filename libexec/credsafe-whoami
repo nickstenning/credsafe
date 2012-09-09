@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+cat "${CREDSAFE_ROOT}/me"

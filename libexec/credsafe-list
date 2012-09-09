@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+subdir="$1"
+
+find "${CREDSAFE_ROOT}/db" -name '*.gpg' |
+grep -F "$subdir" | 
+while read line; do
+  line="${line%%.gpg}"
+  line="${line##${CREDSAFE_ROOT}/db/}"
+  echo $line
+done | sort 

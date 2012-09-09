@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "${ANSI_BOLD}${ANSI_BLUE}---> ${ANSI_WHITE}${@}${ANSI_RESET}" >&2

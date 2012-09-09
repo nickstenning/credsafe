@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+if [ $# -ne 1 ]; then
+  exec credsafe help set
+  exit 1
+fi
+
+credname="$1"
+credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
+recpfile="${CREDSAFE_ROOT}/db/${credname}.rcp"
+
+credsafe checkname "$credname"
+
+if [ ! -f "$credfile" ]; then
+  error "Credential '${credname}' doesn't exist! Use 'credsafe add' to add a
+       new credential."
+  exit 1
+fi
+
+recpargs="$(while read line; do
+             echo "-r ${line}"
+            done <"$recpfile" | xargs)"
+
+credsafe gpg --yes -o "$credfile" "${recpargs[@]}" -se

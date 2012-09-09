@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+if [ $# -ne 1 ]; then
+  exec credsafe help get
+  exit 1
+fi
+
+credname="$1"
+creddir="${CREDSAFE_ROOT}/db/$(dirname ${credname})"
+credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
+
+credsafe checkname "$credname"
+
+if [ ! -f "$credfile" ]; then
+  error "Credential '${credname}' does not exist!"
+  exit 1
+fi
+
+if ! credsafe gpg -d "$credfile"; then   
+  error "Problem decrypting file. Perhaps you don't have permissions to read
+         this credential?"
+  exit 1
+fi
+
+

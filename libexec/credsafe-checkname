@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+if [ $# -ne 1 ]; then
+  exec credsafe help checkname
+  exit 1
+fi
+
+credname="$1"
+
+if ! echo "$credname" | grep -Eq '^([[:alnum:]_-]+/)*[[:alnum:]_-]+$'; then
+  error "Credential name may only contain a slash-delimited list of names
+       containing alphanumeric characters, underscores and dashes."
+  exit 1
+fi
+

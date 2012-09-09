@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "${ANSI_GREEN}${ANSI_BOLD}OK:${ANSI_RESET}${ANSI_GREEN} ${@}${ANSI_RESET}" >&2

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -e
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+
+credsafe init -c
+
+if [ $# -ne 1 ]; then
+  exec credsafe help rm
+  exit 1
+fi
+
+credname="$1"
+creddir="${CREDSAFE_ROOT}/db/$(dirname ${credname})"
+credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
+recpfile="${CREDSAFE_ROOT}/db/${credname}.rcp"
+
+credsafe checkname "$credname"
+
+if [ ! -f "$credfile" ]; then
+  error "Credential '${credname}' does not exist!"
+  exit 1
+fi
+
+rm -f "$credfile"
+rm -f "$recpfile"
+if [ "$creddir" != "${CREDSAFE_ROOT}/db/" -a -z "$(ls "$creddir")" ]; then
+  rmdir "$creddir"
+fi
