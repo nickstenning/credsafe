@@ -23,6 +23,6 @@ fi
 
 rm -f "$credfile"
 rm -f "$recpfile"
-if [ "$creddir" != "${CREDSAFE_ROOT}/db/" -a -z "$(ls "$creddir")" ]; then
+if [ "$creddir" != "${CREDSAFE_ROOT}/db/." -a -z "$(ls "$creddir")" ]; then
   rmdir "$creddir"
 fi
