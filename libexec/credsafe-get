@@ -20,7 +20,7 @@ if [ ! -f "$credfile" ]; then
   exit 1
 fi
 
-if ! credsafe gpg -d "$credfile"; then   
+if ! credsafe gpg -d "$credfile"; then
   error "Problem decrypting file. Perhaps you don't have permissions to read
          this credential?"
   exit 1

@@ -3,14 +3,14 @@ set -e
 [ -n "$CREDSAFE_DEBUG" ] && set -x
 
 case "$1" in
-"") 
+"")
   echo "Usage: credsafe <command> [<args>]
 
 Some useful credsafe commands are:
    add           Add credentials
    commands      List all credsafe commands
    get           Get the value of a credential
-   init          Set up the credsafe database   
+   init          Set up the credsafe database
    list          List credentials
    rm            Remove credentials
    set           Update the value of a credential
