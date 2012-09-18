@@ -3,7 +3,7 @@ set -e
 [ -n "$CREDSAFE_DEBUG" ] && set -x
 
 if [ $# -ne 1 ]; then
-  exec credsafe help checkname
+  credsafe help checkname
   exit 1
 fi
 

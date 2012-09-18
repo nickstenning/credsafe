@@ -5,7 +5,7 @@ set -e
 credsafe init -c
 
 if [ $# -ne 1 ]; then
-  exec credsafe help get
+  credsafe help get
   exit 1
 fi
 
