@@ -16,7 +16,7 @@ recpfile="${CREDSAFE_ROOT}/db/${credname}.rcp"
 credsafe checkname "$credname"
 
 if [ ! -f "$credfile" ]; then
-  error "Credential '${credname}' doesn't exist! Use 'credsafe add' to add a
+  error "Credential '${credname}' does not exist! Use 'credsafe add' to add a
        new credential."
   exit 1
 fi
