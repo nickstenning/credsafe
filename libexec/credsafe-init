@@ -23,7 +23,14 @@ check_identity () {
     if [ "$checkonly" != "yes" ]; then
       printf "Please supply your GPG key ID: " >&2
       read -r REPLY
-      echo $REPLY >"${CREDSAFE_ROOT}/me"
+
+      if gpg --with-colons --list-keys "$REPLY" >/dev/null 2>&1; then
+        echo $REPLY >"${CREDSAFE_ROOT}/me"
+      else
+        error "Couldn't find GPG key with ID '$REPLY'"
+        exit 1
+      fi
+
     # Otherwise, fail
     else      
       die
@@ -31,7 +38,7 @@ check_identity () {
   fi
 
   local id="$(cat "${CREDSAFE_ROOT}/me")"
-  local extended_id="$(gpg --with-colons --list-keys "${id}" | grep '^pub' | head -1 | cut -d: -f10)"
+  local extended_id="$(gpg --with-colons --list-keys "$id" | grep '^pub' | head -1 | cut -d: -f10)"
   init_status "Identified as ${id} (${extended_id})"
 }
 
