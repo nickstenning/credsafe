@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
 credsafe init -c
 
@@ -9,7 +9,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-credname="$1"
+credname="${1:-}"
 credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
 recpfile="${CREDSAFE_ROOT}/db/${credname}.rcp"
 

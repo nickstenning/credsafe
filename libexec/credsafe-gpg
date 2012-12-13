@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
 exec gpg --no-verbose --quiet -u "$(credsafe whoami)" "$@"

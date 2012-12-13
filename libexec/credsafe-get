@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
 credsafe init -c
 
@@ -9,9 +9,9 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-credname="$1"
-creddir="${CREDSAFE_ROOT}/db/$(dirname ${credname})"
-credfile="${CREDSAFE_ROOT}/db/${credname}.gpg"
+credname=$1
+creddir=${CREDSAFE_ROOT}/db/$(dirname "$credname")
+credfile=${CREDSAFE_ROOT}/db/${credname}.gpg
 
 credsafe checkname "$credname"
 

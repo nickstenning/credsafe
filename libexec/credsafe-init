@@ -1,9 +1,11 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
-if [ "$1" = "-c" ]; then
+if [ "${1:-}" = "-c" ]; then
   checkonly=yes
+else
+  checkonly=no
 fi
 
 die () {

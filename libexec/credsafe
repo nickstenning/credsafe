@@ -1,7 +1,9 @@
-#!/usr/bin/env bash
-set -e
-
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
+
+: ${CREDSAFE_NO_COLOUR:=}
+: ${CREDSAFE_ROOT:="${HOME}/.credsafe"}
 
 CREDSAFE_VERSION="0.0.1"
 
@@ -15,7 +17,7 @@ if [ -t 2 -a -z "$CREDSAFE_NO_COLOUR" ]; then
   export ANSI_BOLD="\033[1m"
 fi
 
-abs_dirname() {
+abs_dirname () {
   local cwd="$(pwd)"
   local path="$1"
 
@@ -29,28 +31,24 @@ abs_dirname() {
   cd "$cwd"
 }
 
-bin_path="$(abs_dirname "$0")"
-export PATH="${bin_path}:${PATH}"
+export PATH="$(abs_dirname "$0"):${PATH}"
 
-[[ -z "$CREDSAFE_ROOT" ]] && CREDSAFE_ROOT="${HOME}/.credsafe"
 export CREDSAFE_ROOT
-
 export GIT_WORK_TREE="${CREDSAFE_ROOT}"
 export GIT_DIR="${CREDSAFE_ROOT}/.git"
 
-command="$1"
+command=${1:-"--help"}
 case "$command" in
-  "" | "-h" | "--help" )
-    echo -e "credsafe ${CREDSAFE_VERSION}\n$(credsafe-help)" >&2
+  "-h"|"--help")
+    echo "credsafe ${CREDSAFE_VERSION}\n\n$(credsafe-help)" >&2
     ;;
-  * )
-    command_path="$(command -v "credsafe-$command" || true)"
-    if [ -z "$command_path" ]; then
-      echo "credsafe: no such command \`$command'" >&2
+  *)
+    if ! which "credsafe-$command" >/dev/null; then
+      echo "credsafe: no such command '$command'" >&2
       exit 1
     fi
 
     shift 1
-    exec "$command_path" "$@"
+    exec "credsafe-$command" "$@"
     ;;
 esac

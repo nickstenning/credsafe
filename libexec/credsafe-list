@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
 credsafe init -c
 
-subdir="$1"
+subdir="${1:-}"
 
 find "${CREDSAFE_ROOT}/db" -name '*.gpg' |
 grep -F "$subdir" |

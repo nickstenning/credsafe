@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
 
-case "$1" in
+case "${1:-}" in
 "")
   echo "Usage: credsafe <command> [<args>]
 
@@ -19,16 +19,16 @@ See 'credsafe help <command>' for information on a specific command."
 ;;
 
 "add"|"set")
-  echo "Usage: credsafe ${1} <name>
+  echo "Usage: credsafe $1 <name>
 
 Supply the credential on STDIN, e.g.
 
-  echo 'myPassword123' | credsafe ${1} email
+  echo 'myPassword123' | credsafe $1 email
 
 You can arbitrarily nest credential names with slashes, as if you were
 creating files in a directory hierarchy:
 
-  echo 'secret' | credsafe ${1} passwords/bank
+  echo 'secret' | credsafe $1 passwords/bank
 "
 
 ;;
