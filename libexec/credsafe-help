@@ -40,6 +40,13 @@ Returns 0 if name is a valid credential name, 1 otherwise."
 
 ;;
 
+"checkusername")
+  echo "Usage: credsafe checkusername <name>
+
+Returns 0 if name is a valid user name, 1 otherwise."
+
+;;
+
 "commands")
   echo "Usage: credsafe commands
 
@@ -74,6 +81,25 @@ credentials matching the supplied prefix string."
   echo "Usage: credsafe rm <name>
 
 Removes the specified credential from the database."
+
+;;
+
+"user")
+  echo "Usage: credsafe user <command> [<args>]
+
+Where <command> is one of:
+   add           Add a user
+   list          List users
+   rm            Remove a user
+
+Add a user:
+   credsafe user add <name> <keyid>
+
+List users:
+   credsafe user list
+
+Remove a user:
+   credsafe user rm <name>"
 
 ;;
 

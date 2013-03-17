@@ -1,3 +1,13 @@
 #!/bin/sh
 [ -n "$CREDSAFE_DEBUG" ] && set -x
 set -eu
+
+command=${1:-"help"}
+
+if ! which "credsafe-user-$command" >/dev/null; then
+  credsafe help user
+  exit 1
+fi
+
+shift 1
+exec "credsafe-user-$command" "$@"

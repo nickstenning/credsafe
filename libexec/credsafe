@@ -34,6 +34,7 @@ abs_dirname () {
 export PATH="$(abs_dirname "$0"):${PATH}"
 
 export CREDSAFE_ROOT
+export CREDSAFE_USERS="${CREDSAFE_ROOT}/users"
 export GIT_WORK_TREE="${CREDSAFE_ROOT}"
 export GIT_DIR="${CREDSAFE_ROOT}/.git"
 

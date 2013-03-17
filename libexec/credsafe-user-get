@@ -1,0 +1,18 @@
+#!/bin/sh
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
+
+credsafe-init -c
+
+if [ $# -ne 1 ]; then
+  credsafe help user
+  exit 1
+fi
+
+name=$1
+
+credsafe checkusername "$name"
+
+touch "$CREDSAFE_USERS"
+
+exec grep -E "^$name[[:space:]]" "$CREDSAFE_USERS"

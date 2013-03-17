@@ -1,0 +1,16 @@
+#!/bin/sh
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
+
+if [ $# -ne 1 ]; then
+  credsafe help checkusername
+  exit 1
+fi
+
+username="$1"
+
+if ! echo "$username" | grep -Eq '^[[:alnum:]_-]+$'; then
+  error "User name may only contain alphanumeric characters, underscores and dashes."
+  exit 1
+fi
+

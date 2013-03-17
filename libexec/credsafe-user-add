@@ -1,0 +1,24 @@
+#!/bin/sh
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
+
+credsafe init -c
+
+if [ $# -ne 2 ]; then
+  credsafe help user
+  exit 1
+fi
+
+name=$1
+keyid=$2
+
+credsafe checkusername "$name"
+
+if credsafe user get "$name" >/dev/null; then
+  error "User $name already exists"
+  exit 1
+fi
+
+echo "$name\t$keyid" >> "$CREDSAFE_USERS"
+
+status "Added user $name ($keyid)"

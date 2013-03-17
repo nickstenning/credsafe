@@ -1,0 +1,14 @@
+#!/bin/sh
+[ -n "$CREDSAFE_DEBUG" ] && set -x
+set -eu
+
+credsafe init -c
+
+if [ $# -ne 0 ]; then
+  credsafe help user
+  exit 1
+fi
+
+touch "$CREDSAFE_USERS"
+cat "$CREDSAFE_USERS"
+
